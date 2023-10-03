@@ -44,7 +44,7 @@ module.exports = cds.service.impl( async function(){
     this.on('boost', async (req,res) => {
         try {
             const ID = req.params[0];
-            console.log("Hey Amigo, Your purchase order with id " + JSON.stringify(req.params[0]) + " will be boosted");
+            console.log("Hey Amigo, Your purchase order with id as: " + JSON.stringify(req.params[0]) + " will be boosted");
             const tx = cds.tx(req);
             //CDS Query Language - communicate to DB in agnostic manner
             await tx.update(PurchaseOrder).with({
