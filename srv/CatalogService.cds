@@ -2,20 +2,16 @@ using { anubhav.db } from '../db/datamodel';
 using { anubhav.cds } from '../db/CDSViews';
 
 
-service CatalogService @(path : 'CatalogService') {
+service CatalogService @(path : 'CatalogService', requires: 'authenticated-user') {
     //@Capabilities.Updatable: false
     entity BusinessPartnerSet as projection on db.master.businesspartner;
     entity AddressSet as projection on db.master.address;
     //@readonly
-    entity EmployeeSet as projection on db.master.employees {
-        ID,
-        nameFirst,
-        nameLast,
-        sex,
-        phoneNumber,
-        email,
-        salaryAmount
-    };
+
+    entity EmployeeSet @(restrict: [ 
+                        { grant: ['READ'], to: 'mycapapp_Viewer', where: 'bankName = $user.BankName' },
+                        { grant: ['WRITE'], to: 'mycapapp_Admin' }
+                        ]) as projection on db.master.employees;
     entity PurchaseOrder @(
         odata.draft.enabled: true
     ) as projection on db.transaction.purchaseorder{
